@@ -15,3 +15,7 @@ colorPrimary: '#52c41a',
 };
 
 export default theme;
+
+## antd component make genericComponent for reuseabolity
+
+## use 3rd party phone component with it

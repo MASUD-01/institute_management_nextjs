@@ -30,7 +30,29 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ConfigProvider theme={theme}>
+        <ConfigProvider
+          theme={{
+            ...theme,
+            token: {
+              borderRadius: 5,
+            },
+            components: {
+              Form: {
+                // itemMarginBottom: 0,
+                fontWeightStrong: 800,
+                inlineItemMarginBottom: 0,
+                verticalLabelMargin: 0,
+                verticalLabelPadding: 0,
+                labelRequiredMarkColor: "green",
+              },
+
+              Input: {
+                colorPrimaryBg: "red",
+                colorBgContainer: "#f5f5f5",
+              },
+            },
+          }}
+        >
           <AntdRegistry>{children}</AntdRegistry>
         </ConfigProvider>
       </body>

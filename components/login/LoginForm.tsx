@@ -1,20 +1,9 @@
 "use client";
 
-import { Form, Input, Button, Checkbox } from "antd";
-
-import {
-  UserOutlined,
-  LockOutlined,
-  EyeInvisibleOutlined,
-  EyeTwoTone,
-} from "@ant-design/icons";
+import { Form, Button, Checkbox } from "antd";
 import Link from "next/link";
-import {
-  FormItemInput,
-  MakeForm,
-  MakeForm1,
-  MakeForm2,
-} from "@/common/Form/FormItems";
+import { FormItemInput, FormItemPassword } from "@/common/Form/FormItems";
+
 const LoginForm = () => {
   const [form] = Form.useForm();
   const onFinish = async () => {
@@ -47,49 +36,33 @@ const LoginForm = () => {
       layout="vertical"
       size="large"
     >
-      {/* <FormItemInput /> */}
-      <Form.Item
+      <FormItemInput
         name="login_id"
-        label="UserId"
-        rules={[
-          {
-            required: true,
-            message: "Please input your email or userId!",
-          },
-        ]}
-      >
-        <Input
-          prefix={<UserOutlined />}
-          placeholder="Email or Username"
-          className="custom-input"
-        />
-      </Form.Item>
-      <Form.Item
-        name="password"
-        label="Password"
-        rules={[{ required: true, message: "Please input your password!" }]}
-      >
-        <Input.Password
-          prefix={<LockOutlined />}
-          placeholder="Enter your password"
-          iconRender={(visible) =>
-            visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-          }
-          className="custom-input"
-        />
-      </Form.Item>
+        placeholder="Email or Username"
+        formItemProps={{
+          name: "login_id",
+          label: "UserId",
+          rules: [
+            { required: true, message: "Please input your email or userId!" },
+          ],
+        }}
+      />
+      <FormItemPassword
+        placeholder="Password"
+        formItemProps={{
+          name: "password",
+          label: "Password",
+          rules: [{ required: true, message: "Please input your password!" }],
+        }}
+      />
+
       <Form.Item>
         <Checkbox name="remember">Remember me</Checkbox>
         <Link className="forgot-link" href="/auth/send-otp">
           Forgot password?
         </Link>
       </Form.Item>
-      <Button
-        type="primary"
-        htmlType="submit"
-        block
-        // loading={isLoading}
-      >
+      <Button type="primary" htmlType="submit" block>
         Sign In
       </Button>
     </Form>

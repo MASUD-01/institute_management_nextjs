@@ -13,21 +13,9 @@ import {
   InputProps,
   InputNumberProps,
 } from "antd";
-import { RuleObject } from "antd/es/form";
 import { PasswordProps, TextAreaProps } from "antd/es/input";
 import { OTPProps } from "antd/es/input/OTP";
 import PhoneInput, { PhoneInputProps } from "react-phone-input-2";
-
-type ExtractNameType<T> = T extends Record<string, unknown> ? keyof T : string;
-
-interface CommonFormItemProps<T> extends Omit<AntFormItemProps, "name"> {
-  placeholder?: string;
-  label?: string;
-  name: ExtractNameType<T> | ExtractNameType<T>[];
-  required?: boolean;
-  validator?: (rule: RuleObject, value: string) => Promise<void> | void;
-  colProps?: ColProps;
-}
 
 type IComponentProps = {
   colProps?: ColProps;
@@ -50,57 +38,22 @@ const antdGenericComponent = <
     ...rest
   }: IComponentProps & React.ComponentProps<T>) => (
     <Col {...colProps}>
-      <Form.Item {...formItemProps}>
+      <Form.Item
+        {...formItemProps}
+        labelCol={{
+          style: {
+            margin: 0,
+            padding: 0,
+            height: 30,
+            fontWeight: 600,
+          },
+        }}
+      >
         <AntInputCom {...(rest as P)} />
       </Form.Item>
     </Col>
   );
 };
-
-export function createFormItem<
-  T extends Record<string, unknown>,
-  ComponentProps
->(
-  Component: React.ComponentType<ComponentProps>,
-  defaultColProps = { span: 24 }
-) {
-  return function FormItemGeneric<FormTypes = T>({
-    placeholder,
-    label,
-    name,
-    required = true,
-    validator,
-    colProps = defaultColProps,
-    componentProps = {} as ComponentProps,
-    ...formItemProps
-  }: CommonFormItemProps<FormTypes> & { componentProps?: ComponentProps }) {
-    const rules = [
-      ...(required
-        ? [{ required, message: `${label || "This field"} is required.` }]
-        : []),
-      ...(validator ? [{ validator }] : []),
-    ];
-
-    return (
-      <Col {...colProps}>
-        <Form.Item
-          label={label}
-          name={name as unknown}
-          rules={rules}
-          {...formItemProps}
-          style={{ marginBottom: 5 }}
-          labelCol={{ style: { marginBottom: 0, paddingBottom: 0 } }}
-        >
-          <Component
-            {...(placeholder ? { placeholder } : { placeholder: label })}
-            {...componentProps}
-          />
-        </Form.Item>
-      </Col>
-    );
-  };
-}
-
 // FORM ITEM INPUT
 export const FormItemInput = antdGenericComponent<typeof Input, InputProps>({
   AntInputCom: Input,
@@ -143,10 +96,10 @@ export const FormItemInputOTP = antdGenericComponent<
 >({ AntInputCom: Input.OTP });
 
 // FORM ITEM INPUT RADIO
-export const FormItemRadioGroup = createFormItem<
-  Record<string, unknown>,
+export const FormItemRadioGroup = antdGenericComponent<
+  typeof Radio.Group,
   GetProps<typeof Radio.Group>
->(Radio.Group, { span: 24 });
+>({ AntInputCom: Radio.Group });
 
 // FORM ITEM SELECT
 export const FormItemSelect = antdGenericComponent<typeof Select, SelectProps>({
@@ -154,20 +107,13 @@ export const FormItemSelect = antdGenericComponent<typeof Select, SelectProps>({
 });
 
 // FORM ITEM DATE PICKER
-export const FormItemDatePicker = createFormItem<
-  Record<string, unknown>,
+export const FormItemDatePicker = antdGenericComponent<
+  typeof DatePicker,
   GetProps<typeof DatePicker>
->((props) => <DatePicker allowClear style={{ width: "100%" }} {...props} />, {
-  span: 24,
-});
+>({ AntInputCom: DatePicker });
 
 // FORM ITEM DATE PICKER RANGE
-export const FormItemDatePickerRange = createFormItem<
-  Record<string, unknown>,
+export const FormItemDatePickerRange = antdGenericComponent<
+  typeof DatePicker.RangePicker,
   GetProps<typeof DatePicker.RangePicker>
->(
-  (props) => (
-    <DatePicker.RangePicker allowClear style={{ width: "100%" }} {...props} />
-  ),
-  { span: 24 }
-);
+>({ AntInputCom: DatePicker.RangePicker });
