@@ -9,14 +9,9 @@ import {
   DatePicker,
   FormItemProps as AntFormItemProps,
   ColProps,
-  SelectProps,
-  InputProps,
-  InputNumberProps,
 } from "antd";
 import { RuleObject } from "antd/es/form";
-import { PasswordProps, TextAreaProps } from "antd/es/input";
-import { OTPProps } from "antd/es/input/OTP";
-import PhoneInput, { PhoneInputProps } from "react-phone-input-2";
+import PhoneInput from "react-phone-input-2";
 
 type ExtractNameType<T> = T extends Record<string, unknown> ? keyof T : string;
 
@@ -28,34 +23,6 @@ interface CommonFormItemProps<T> extends Omit<AntFormItemProps, "name"> {
   validator?: (rule: RuleObject, value: string) => Promise<void> | void;
   colProps?: ColProps;
 }
-
-type IComponentProps = {
-  colProps?: ColProps;
-  formItemProps?: AntFormItemProps;
-};
-type IProps<T, P> = {
-  AntInputCom: T;
-  props?: P;
-};
-const antdGenericComponent = <
-  T extends React.ElementType,
-  P extends React.ComponentProps<T>
->({
-  AntInputCom,
-  props,
-}: IProps<T, P>) => {
-  return ({
-    colProps,
-    formItemProps,
-    ...rest
-  }: IComponentProps & React.ComponentProps<T>) => (
-    <Col {...colProps}>
-      <Form.Item {...formItemProps}>
-        <AntInputCom {...(rest as P)} />
-      </Form.Item>
-    </Col>
-  );
-};
 
 export function createFormItem<
   T extends Record<string, unknown>,
@@ -102,45 +69,52 @@ export function createFormItem<
 }
 
 // FORM ITEM INPUT
-export const FormItemInput = antdGenericComponent<typeof Input, InputProps>({
-  AntInputCom: Input,
-});
+export const FormItemInput = createFormItem<
+  Record<string, unknown>,
+  GetProps<typeof Input>
+>(Input, { span: 24 });
 
 // FORM ITEM PASSWORD
-export const FormItemPassword = antdGenericComponent<
-  typeof Input.Password,
-  PasswordProps
->({
-  AntInputCom: Input.Password,
-});
+export const FormItemPassword = createFormItem<
+  Record<string, unknown>,
+  GetProps<typeof Input.Password>
+>(Input.Password, { span: 24 });
 
 // FORM ITEM TEXT AREA
-export const FormItemTextarea = antdGenericComponent<
-  typeof Input.TextArea,
-  TextAreaProps
->({
-  AntInputCom: Input.TextArea,
-});
+export const FormItemTextarea = createFormItem<
+  Record<string, unknown>,
+  GetProps<typeof Input.TextArea>
+>(Input.TextArea, { span: 24 });
 
 // FORM ITEM INPUT NUMBER
-export const FormItemInputNumber = antdGenericComponent<
-  typeof InputNumber,
-  InputNumberProps
->({ AntInputCom: InputNumber });
+export const FormItemInputNumber = createFormItem<
+  Record<string, unknown>,
+  GetProps<typeof InputNumber>
+>(
+  (props) => <InputNumber type="number" style={{ width: "100%" }} {...props} />,
+  { span: 24 }
+);
 
-// 3rd PARTY PHONE INPUT
-export const FormItemPhoneNumber = antdGenericComponent<
-  typeof PhoneInput,
-  PhoneInputProps
->({
-  AntInputCom: PhoneInput,
-});
-
+export const FormItemPhoneNumber = createFormItem<
+  Record<string, unknown>,
+  GetProps<typeof Input>
+>(
+  () => (
+    <PhoneInput
+      enableSearch
+      country="bd"
+      // value={phone}
+      // onChange={(phone) => setPhone(phone)}
+      inputStyle={{ width: "100%", height: "32px", borderRadius: 0 }}
+    />
+  ),
+  { span: 24 }
+);
 // FORM ITEM INPUT OTP
-export const FormItemInputOTP = antdGenericComponent<
-  typeof Input.OTP,
-  OTPProps
->({ AntInputCom: Input.OTP });
+export const FormItemInputOTP = createFormItem<
+  Record<string, unknown>,
+  GetProps<typeof Input.OTP>
+>(Input.OTP, { span: 24 });
 
 // FORM ITEM INPUT RADIO
 export const FormItemRadioGroup = createFormItem<
@@ -149,9 +123,26 @@ export const FormItemRadioGroup = createFormItem<
 >(Radio.Group, { span: 24 });
 
 // FORM ITEM SELECT
-export const FormItemSelect = antdGenericComponent<typeof Select, SelectProps>({
-  AntInputCom: Select,
-});
+export const FormItemSelect = createFormItem<
+  Record<string, unknown>,
+  GetProps<typeof Select>
+>(
+  (props) => (
+    <Select
+      allowClear
+      showSearch
+      style={{ width: "100%" }}
+      optionFilterProp="children"
+      filterOption={(input, option) =>
+        ((option?.label ?? "") as string)
+          .toLowerCase()
+          .includes(input?.toLowerCase())
+      }
+      {...props}
+    />
+  ),
+  { span: 24 }
+);
 
 // FORM ITEM DATE PICKER
 export const FormItemDatePicker = createFormItem<

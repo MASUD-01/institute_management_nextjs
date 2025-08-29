@@ -9,6 +9,12 @@ import {
   EyeTwoTone,
 } from "@ant-design/icons";
 import Link from "next/link";
+import {
+  FormItemInput,
+  MakeForm,
+  MakeForm1,
+  MakeForm2,
+} from "@/common/Form/FormItems";
 const LoginForm = () => {
   const [form] = Form.useForm();
   const onFinish = async () => {
@@ -41,6 +47,7 @@ const LoginForm = () => {
       layout="vertical"
       size="large"
     >
+      {/* <FormItemInput /> */}
       <Form.Item
         name="login_id"
         label="UserId"
