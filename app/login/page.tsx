@@ -1,27 +1,12 @@
+"use client";
 import React from "react";
-import {
-  Row,
-  Col,
-  Card,
-  Typography,
-  Form,
-  Input,
-  Button,
-  Checkbox,
-} from "antd";
-import {
-  UserOutlined,
-  LockOutlined,
-  EyeInvisibleOutlined,
-  EyeTwoTone,
-} from "@ant-design/icons";
+import { Row, Col, Card, Button } from "antd";
 import "./Login.css";
 import image1 from "@/public/asset/image1.jpg";
 import image2 from "@/public/asset/image2.jpg";
 import image3 from "@/public/asset/image3.jpg";
 import Image from "next/image";
 import Title from "antd/es/typography/Title";
-import Link from "next/link";
 import LoginForm from "@/components/login/LoginForm";
 import { logo } from "@/constant/logo";
 
@@ -33,7 +18,7 @@ const Login: React.FC = () => {
       <Row className="login-row" justify="center">
         {/* Left side - form */}
         <Col xs={24} md={12} className="login-left">
-          <Card size="small" className="login-card" bordered={false}>
+          <Card variant="borderless" size="small" className="login-card">
             <div
               className="login-logo-container"
               style={{
