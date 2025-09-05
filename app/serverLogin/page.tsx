@@ -6,25 +6,22 @@ import image1 from "@/public/asset/image1.jpg";
 import image2 from "@/public/asset/image2.jpg";
 import image3 from "@/public/asset/image3.jpg";
 import Image from "next/image";
-import { socialLogin } from "../actions/socialLogin";
-import { ServerLoginAuth } from "../api/auth/serverLoginAuth";
+import { doCredentialLogin, socialLogin } from "../actions/socialLogin";
 import { FormItemInput, FormItemPassword } from "@/common/Form/FormItems";
 import Link from "next/link";
 import Title from "antd/es/typography/Title";
 import { logo } from "@/constant/logo";
-// import Title from "antd/es/typography/Title";
-// import { logo } from "@/constant/logo";
-// import LoginForm from "@/components/login/LoginForm";
-// import { FormItemInput, FormItemPassword } from "@/common/Form/FormItems";
-// import Link from "next/link";
-// import { useRouter } from "next/navigation";
-// import { ServerLoginAuth } from "../api/auth/serverLoginAuth";
-// import { socialLogin } from "../actions/socialLogin";
 
 const images = [image1, image2, image3];
 
+export type ILogin = {
+  email: string;
+  password: string;
+};
 const ServerLogin: React.FC = () => {
-  const onFinish = async (event: any) => {};
+  async function onSubmit(event: ILogin) {
+    const res = await doCredentialLogin(event);
+  }
   return (
     <>
       <div className="login-wrapper">
@@ -49,21 +46,19 @@ const ServerLogin: React.FC = () => {
 
               <>
                 <Form
-                  // action={ServerLoginAuth}
-                  name="admin-login"
                   onFinish={async (values) => {
-                    await ServerLoginAuth(values);
+                    await onSubmit(values);
                     // handle success / error
                   }}
                   layout="vertical"
                   size="large"
                 >
                   <FormItemInput
-                    name="login_id"
+                    name="email"
                     placeholder="Email or Username"
                     formItemProps={{
-                      name: "login_id",
-                      label: "UserId",
+                      name: "email",
+                      label: "Email",
                       rules: [
                         {
                           required: true,
@@ -97,7 +92,7 @@ const ServerLogin: React.FC = () => {
                   </Button>
                 </Form>
 
-                {/* ---------------------------social login----------------- */}
+                {/* ---------------------------server social login----------------- */}
                 <div className="flex items-center justify-center  bg-gray-100">
                   <div className="w-full max-w-sm bg-white rounded-2xl shadow-lg p-8 space-y-6">
                     <form className="space-y-4" action={socialLogin}>
