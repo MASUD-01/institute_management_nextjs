@@ -10,7 +10,7 @@ export type IDepartment = {
   department_id: number;
   name: string;
   status: number;
-}[];
+};
 
 //**suspense works section label
 //**loading.tsx works  route label
