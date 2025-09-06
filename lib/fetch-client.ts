@@ -27,7 +27,7 @@ export const fetchClient = async <T>(
     if (res.status === 403 || res.status === 401) {
       console.log("token expirary");
       signOut();
-      redirect("/serverLogin");
+      redirect("/login");
     }
   }
 

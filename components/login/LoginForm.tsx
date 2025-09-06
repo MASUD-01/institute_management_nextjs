@@ -3,50 +3,36 @@
 import { Form, Button, Checkbox } from "antd";
 import Link from "next/link";
 import { FormItemInput, FormItemPassword } from "@/common/Form/FormItems";
-// import { signIn } from "@/auth/auth";  //this for server component
-import { signIn } from "next-auth/react"; // this for client component
-
-import { login } from "@/app/actions";
-import { use, useState } from "react";
-import { useRouter } from "next/navigation";
+import { doCredentialLogin } from "@/app/actions/socialLogin";
+import { ILogin } from "@/app/login/page";
 
 const LoginForm = () => {
   const [form] = Form.useForm();
-  const router = useRouter();
-  const onFinish = async (event: any) => {
-    try {
-      const formData = new FormData(event.currentTarget);
-      const response: any = await login(formData);
-
-      if (!!response?.error) {
-        setError(response?.error.message);
-      }
-    } catch (err) {
-      router.push("/");
-    }
-  };
-  const [error, setError] = useState("");
-  const handleAuth = () => {
-    signIn("google", { callbackUrl: "http://localhost:30001" });
-  };
+  async function onSubmit(event: ILogin) {
+    const res = await doCredentialLogin(event);
+  }
   return (
     <>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {/* {error && <p style={{ color: "red" }}>{error}</p>} */}
       <Form
-        form={form}
-        name="admin-login"
-        onFinish={onFinish}
+        onFinish={async (values) => {
+          await onSubmit(values);
+          // handle success / error
+        }}
         layout="vertical"
         size="large"
       >
         <FormItemInput
-          name="login_id"
+          name="email"
           placeholder="Email or Username"
           formItemProps={{
-            name: "login_id",
-            label: "UserId",
+            name: "email",
+            label: "Email",
             rules: [
-              { required: true, message: "Please input your email or userId!" },
+              {
+                required: true,
+                message: "Please input your email or userId!",
+              },
             ],
           }}
         />
@@ -55,7 +41,12 @@ const LoginForm = () => {
           formItemProps={{
             name: "password",
             label: "Password",
-            rules: [{ required: true, message: "Please input your password!" }],
+            rules: [
+              {
+                required: true,
+                message: "Please input your password!",
+              },
+            ],
           }}
         />
 
@@ -69,8 +60,6 @@ const LoginForm = () => {
           Sign In
         </Button>
       </Form>
-
-      <Button onClick={handleAuth}>Google</Button>
     </>
   );
 };

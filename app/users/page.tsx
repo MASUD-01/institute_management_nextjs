@@ -8,7 +8,7 @@ const UserPage = async () => {
   });
 
   const users = res?.data;
-  console.log(users, "---------8888888");
+
   return <div>UserPage {users[0]?.name}</div>;
 };
 

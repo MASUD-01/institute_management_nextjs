@@ -1,7 +1,7 @@
 "use server";
 
 import { signIn } from "@/auth";
-import { ILogin } from "../serverLogin/page";
+import { ILogin } from "../login/page";
 
 export async function socialLogin(formData: FormData) {
   const action = formData.get("socialAction");

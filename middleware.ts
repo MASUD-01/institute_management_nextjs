@@ -1,19 +1,29 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import NextAuth from "next-auth";
 
-// This function can be marked `async` if using `await` inside
-export function middleware(request: NextRequest) {
-  console.log("i amge", request.url);
-  // return NextResponse.rewrite(new URL("/", request.url));
-  return NextResponse.next();
-  //return NextResponse.json({ name: "middleware" });
+// const { auth } = NextAuth(authConfig);
+
+import { PUBLIC_ROUTES, LOGIN, ROOT, PROTECTED_SUB_ROUTES } from "@/lib/routes";
+import { authConfig } from "./auth.config";
+import { auth } from "./auth";
+
+export async function middleware(request: NextRequest) {
+  const { nextUrl } = request;
+  const session = await auth();
+  const isAuthenticated = !!session?.user;
+  console.log(isAuthenticated, nextUrl.pathname);
+
+  const isPublicRoute =
+    (PUBLIC_ROUTES.find((route) => nextUrl.pathname.startsWith(route)) ||
+      nextUrl.pathname === ROOT) &&
+    !PROTECTED_SUB_ROUTES.find((route) => nextUrl.pathname.includes(route));
+
+  console.log(isPublicRoute);
+
+  if (!isAuthenticated && !isPublicRoute)
+    return Response.redirect(new URL(LOGIN, nextUrl));
 }
 
-// See "Matching Paths" below to learn more
-
-///which path u cant match and redirect
-// export const config = {
-//   matcher: "/login",
-// };
-
-// NextResponse.rewrite(new URL('/login', request.url))  hole /login path ta thakbe dashboard e
+export const config = {
+  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+};
