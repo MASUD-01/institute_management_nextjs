@@ -23,7 +23,7 @@ const BottomSection: React.FC<Props> = ({ collapsed }) => {
     >
       <Card
         size="small"
-        bordered={false}
+        variant="borderless"
         style={{
           background:
             "linear-gradient(135deg, rgba(0, 33, 71, 1), rgba(46, 84, 139, 0.8))",
@@ -51,7 +51,7 @@ const BottomSection: React.FC<Props> = ({ collapsed }) => {
               border: "2px solid #ffffff",
             }}
           >
-            <Avatar src={""} size={collapsed ? 40 : 50} />
+            <Avatar src={"/"} size={collapsed ? 40 : 50} />
           </div>
 
           {!collapsed && (
@@ -83,7 +83,7 @@ const BottomSection: React.FC<Props> = ({ collapsed }) => {
         {collapsed
           ? undefined
           : [
-              <Link href={"/settings"}>
+              <Link href={"/settings"} key={"1"}>
                 <Button
                   type="text"
                   //   icon={<Iconify icon='tabler:settings' />}
@@ -96,6 +96,7 @@ const BottomSection: React.FC<Props> = ({ collapsed }) => {
                 </Button>
               </Link>,
               <Button
+                key={"2"}
                 type="text"
                 danger
                 // icon={<Iconify icon='ant-design:logout-outlined' />}

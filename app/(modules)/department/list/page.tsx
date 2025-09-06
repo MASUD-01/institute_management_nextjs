@@ -1,7 +1,143 @@
-import React from "react";
+"use client";
 
-const Department = () => {
-  return <div>Department</div>;
+import Table from "@/components/common/Antd/Table";
+import Container from "@/components/common/Container/Container";
+import CommStatusTag from "@/components/comUtility/Utilities/CommStatusTag";
+import CommTableActions from "@/components/comUtility/Utilities/CommTableActions";
+import useQueryParams from "@/components/hooks/useQueryParams";
+import { showModal } from "@/components/reduxConfig/slice/modalSlice";
+import { useAppDispatch } from "@/components/reduxConfig/store";
+import { useForm } from "antd/es/form/Form";
+import { useState } from "react";
+
+const dummyData = [
+  { id: 1, name: "HR", short_name: "HR", code: "D001", status: true },
+  { id: 2, name: "Finance", short_name: "FIN", code: "D002", status: false },
+  { id: 3, name: "Marketing", short_name: "MKT", code: "D003", status: true },
+  { id: 4, name: "IT", short_name: "IT", code: "D004", status: true },
+];
+
+const DepartmentList = () => {
+  const [form] = useForm();
+  const [data, setData] = useState(dummyData);
+  const [query, setSearchParams] = useQueryParams<{
+    limit: string;
+    skip: string;
+    name: string;
+  }>();
+
+  const onFinish = async (values: any) => {
+    // setFormInstance(form);
+    const newDepartment = {
+      id: data.length + 1,
+      status: true,
+      ...values,
+    };
+    setData([newDepartment, ...data]);
+  };
+
+  const handleDelete = (id: number) => {
+    setData(data.filter((item) => item.id !== id));
+  };
+
+  return (
+    <Container
+      options={{ showButton: true, showStatus: true, showSearchFilter: true }}
+      title={`Department List`}
+      // openModal={{
+      //   title: 'Create Department',
+      //   content: <CreateDepartment loading={false} onFinish={onFinish} />,
+      // }}
+      statusOption={{
+        placeholder: "Select Status",
+        options: [
+          { label: "Active", value: "true" },
+          { label: "InActive", value: "false" },
+        ],
+      }}
+      content={
+        <div style={{ marginTop: "12px" }}>
+          <Table
+            scroll={{ x: 500 }}
+            loading={false}
+            bordered
+            size="small"
+            dataSource={data}
+            rowKey="id"
+            pagination={{
+              onChange(current, size) {
+                setSearchParams({
+                  skip:
+                    current === 1
+                      ? String(current - 1)
+                      : String(
+                          current * Number(query.limit) - Number(query.limit)
+                        ),
+                  limit: String(size),
+                });
+              },
+              showSizeChanger: true,
+              defaultPageSize: query.limit ? Number(query.limit) : 100,
+              pageSizeOptions: ["50", "100", "200", "300", "400", "500"],
+              total: data.length,
+              showTotal: (total) => `Total ${total}`,
+            }}
+            columns={[
+              {
+                title: "Name",
+                dataIndex: "name",
+                key: "name",
+              },
+              {
+                title: "Short name",
+                dataIndex: "short_name",
+                key: "short_name",
+              },
+              {
+                title: "Code",
+                dataIndex: "code",
+                key: "code",
+              },
+              {
+                title: "Status",
+                key: "status",
+                align: "center",
+                render: (_, record) => (
+                  <CommStatusTag
+                    status={record?.status ? "Active" : "Inactive"}
+                  />
+                ),
+              },
+              {
+                title: "Action",
+                key: "action",
+                align: "center",
+                width: 110,
+                render: (_, record) => (
+                  <CommTableActions
+                    showDelete
+                    deleteOnConfirm={() => handleDelete(record.id)}
+                    showEdit
+                    handleEditChange={() => {
+                      if (record) {
+                        form?.setFieldsValue({ ...record });
+                      }
+                      // dispatch(
+                      //   showModal({
+                      //     title: 'Edit Department',
+                      //     content: <EditDepartment record={record} />,
+                      //   })
+                      // );
+                    }}
+                  />
+                ),
+              },
+            ]}
+          />
+        </div>
+      }
+    />
+  );
 };
 
-export default Department;
+export default DepartmentList;

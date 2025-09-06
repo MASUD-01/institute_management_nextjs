@@ -7,7 +7,7 @@ import image3 from "@/public/asset/image3.jpg";
 import Image from "next/image";
 import { socialLogin } from "../actions/socialLogin";
 import Title from "antd/es/typography/Title";
-import { logo } from "@/constant/logo";
+import { logo } from "@/constant/constant";
 import LoginForm from "@/components/login/LoginForm";
 
 const images = [image1, image2, image3];

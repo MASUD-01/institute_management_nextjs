@@ -21,7 +21,7 @@ const TopSection: React.FC<Props> = ({ collapsed }) => {
             placeItems: "center",
           }}
         >
-          <Avatar src={""} size={collapsed ? 30 : 45} />
+          <Avatar src={"/"} size={collapsed ? 30 : 45} />
         </div>
         {!collapsed && (
           <div

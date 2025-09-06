@@ -4,6 +4,7 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { ConfigProvider } from "antd";
 import theme from "@/config/themeAntdConfig";
 import MainLayout from "@/components/layout/page/MainLayout";
+import ReduxProvider from "@/components/reduxConfig/reduxProvider/ReduxProvider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,33 +21,35 @@ export default function RootLayout({
       <body
       // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ConfigProvider
-          theme={{
-            ...theme,
-            token: {
-              borderRadius: 5,
-            },
-            components: {
-              Form: {
-                // itemMarginBottom: 0,
-                fontWeightStrong: 800,
-                inlineItemMarginBottom: 0,
-                verticalLabelMargin: 0,
-                verticalLabelPadding: 0,
-                labelRequiredMarkColor: "green",
+        <ReduxProvider>
+          <ConfigProvider
+            theme={{
+              ...theme,
+              token: {
+                borderRadius: 5,
               },
+              components: {
+                Form: {
+                  // itemMarginBottom: 0,
+                  fontWeightStrong: 800,
+                  inlineItemMarginBottom: 0,
+                  verticalLabelMargin: 0,
+                  verticalLabelPadding: 0,
+                  labelRequiredMarkColor: "green",
+                },
 
-              Input: {
-                colorPrimaryBg: "red",
-                colorBgContainer: "#f5f5f5",
+                Input: {
+                  colorPrimaryBg: "red",
+                  colorBgContainer: "#f5f5f5",
+                },
               },
-            },
-          }}
-        >
-          <MainLayout>
-            <AntdRegistry>{children}</AntdRegistry>
-          </MainLayout>
-        </ConfigProvider>
+            }}
+          >
+            <MainLayout>
+              <AntdRegistry>{children}</AntdRegistry>
+            </MainLayout>
+          </ConfigProvider>
+        </ReduxProvider>
       </body>
     </html>
   );
