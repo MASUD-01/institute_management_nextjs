@@ -105,7 +105,7 @@ const Container: React.FC<Props> = ({
     const params = new URLSearchParams(searchParams.toString());
     Object.keys(newParams).forEach((key) => {
       if (newParams[key]) {
-        params.set(key, newParams[key]!);
+        params.set(key, newParams[key]!?.trim());
       } else {
         params.delete(key);
       }
@@ -209,8 +209,10 @@ const Container: React.FC<Props> = ({
                       options={statusOption?.options}
                       placeholder={statusOption?.placeholder || "Select"}
                       onChange={(e) => {
+                        console.log(e);
                         setSearchParams({
-                          [statusOption?.queryName || "status"]: e || undefined,
+                          [statusOption?.queryName || "status"]:
+                            e?.trim() || undefined,
                         });
                       }}
                     />
@@ -231,7 +233,7 @@ const Container: React.FC<Props> = ({
                       onChange={(e) => {
                         setSearchParams({
                           [statusOption1?.queryName || "status"]:
-                            e || undefined,
+                            e?.trim() || undefined,
                         });
                       }}
                     />

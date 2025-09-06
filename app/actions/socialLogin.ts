@@ -22,7 +22,7 @@ export async function doCredentialLogin(payload: ILogin) {
     email: payload.email,
     password: payload.password,
     redirect: true, // we handle response manually
-    redirectTo: "/users",
+    redirectTo: "/",
   });
 
   console.log("signIn response:", response);
